@@ -1,34 +1,75 @@
-#myCarousel {
-  display: flex;
-  scroll-behavior: smooth;
-  flex-wrap: nowrap;
+// #myCarousel {
+//   display: flex;
+//   scroll-behavior: smooth;
+//   flex-wrap: nowrap;
+// }
+
+// .carousel-inner {
+//   display: flex;
+//   width: fit-content; /* Adjust the width as per your requirements */
+// }
+
+// .item {
+//   flex: 0 0 auto;
+//   margin-right: 10px;
+//   width: 300px; /* Adjust the width as per your requirements */
+// }
+
+// .carousel-inner .item:last-child {
+//   margin-right: 0;
+// }
+
+// .img-video-div {
+//   width: 100%;
+//   height: auto;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// img,
+// video {
+//   max-width: 100%;
+//   height: auto;
+// }
+/* Example styles for previous and next buttons */
+.slick-prev,
+.slick-next {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #000;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
 }
 
-.carousel-inner {
-  display: flex;
-  width: fit-content; /* Adjust the width as per your requirements */
+.slick-prev {
+  left: 10px;
 }
 
-.item {
-  flex: 0 0 auto;
-  margin-right: 10px;
-  width: 300px; /* Adjust the width as per your requirements */
+.slick-next {
+  right: 10px;
 }
 
-.carousel-inner .item:last-child {
-  margin-right: 0;
+// .example-card {
+//   max-width: 400px;
+//   width: 100%;
+//   margin: 60px auto 0;
+// }
+.slick-wrapper {
+  width: 1000px;
+  margin: 20px auto;
 }
 
-.img-video-div {
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-img,
-video {
-  max-width: 100%;
-  height: auto;
+.slick-prev:before,
+.slick-next:before {
+  color: black !important;
 }

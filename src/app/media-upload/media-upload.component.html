@@ -1,21 +1,85 @@
-<p> Post Create </p>
-<div>
-    <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+<!-- <div class="container">
+    <div class="container_wrap">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <mat-card-title>Post Create</mat-card-title>
+            </mat-card-header>
+            <div>
+                <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+            </div>
+            <ng-container>
+                <div id="myCarousel" class="carousel slide" data-slick='{"slidesToShow": 4, "slidesToScroll": 4}'>
+                    <div class="carousel-inner">
+                        <div class="item" [ngClass]="{'active': i == 0}" *ngFor="let list of mydata;let i = index">
+                            <div class="img-video-div">
+                                <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
+                                <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
+                            </div>
+                        </div>
+                    </div>
+                    <a *ngIf="mydata.length > 0" class="carousel-control left" href="#myCarousel"
+                        data-slide="prev">&lsaquo;</a>
+                    <a *ngIf="mydata.length > 0" class="carousel-control right" href="#myCarousel"
+                        data-slide="next">&rsaquo;</a>
+                </div>
+            </ng-container>
+            <mat-card-content>
+                <app-content></app-content>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="uploadMedia()">Post</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
 </div>
-<br />
-<br />
-<br />
-<ng-container>
-    <div id="myCarousel" class="carousel slide">
-        <div class="carousel-inner">
-            <div class="item" [ngClass]="{'active': i == 0}" *ngFor="let list of mydata;let i = index">
-                <div class="img-video-div">
-                    <img *ngIf="list.type == 'img'" [src]="list.url" />
-                    <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
+  -->
+<div class="container">
+    <div class="container_wrap">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <mat-card-title>Post Create</mat-card-title>
+            </mat-card-header>
+            <div>
+                <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+            </div>
+            <!-- <ngx-slick-carousel class="carousel" [config]="slickCarouselOptions">
+                <div *ngFor="let list of mydata">
+                    <div class="img-video-div">
+                        <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
+                        <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
+                    </div>
+                </div>
+            </ngx-slick-carousel> -->
+            <div>
+                <div class="carousel">
+                    <ul class="slides">
+                        <input type="radio" name="radio-buttons" id="img-1" checked />
+                        <li class="slide-container" *ngFor="let list of mydata; let i = index">
+                            <div class="slide-image">
+                                <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
+                                <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
+                            </div>
+                            <div class="carousel-controls">
+                                <label *ngIf="mydata.length>0" class="prev-slide">
+                                    <span>&lsaquo;</span>
+                                </label>
+                                <label *ngIf="mydata.length>0" class="next-slide">
+                                    <span>&rsaquo;</span>
+                                </label>
+                            </div>
+                        </li>
+                        <div class="carousel-dots">
+                            <label *ngIf="" class="carousel-dot" id="img-dot-1"></label>
+                        </div>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <!-- <a *ngIf="mydata.length > 0" class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-        <a *ngIf="mydata.length > 0" class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a> -->
+            <mat-card-content>
+                <app-content></app-content>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="uploadMedia()">Post</button>
+            </mat-card-actions>
+        </mat-card>
     </div>
-</ng-container>
+</div>
