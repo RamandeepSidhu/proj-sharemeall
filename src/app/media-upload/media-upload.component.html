@@ -1,38 +1,3 @@
-<!-- <div class="container">
-    <div class="container_wrap">
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Post Create</mat-card-title>
-            </mat-card-header>
-            <div>
-                <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
-            </div>
-            <ng-container>
-                <div id="myCarousel" class="carousel slide" data-slick='{"slidesToShow": 4, "slidesToScroll": 4}'>
-                    <div class="carousel-inner">
-                        <div class="item" [ngClass]="{'active': i == 0}" *ngFor="let list of mydata;let i = index">
-                            <div class="img-video-div">
-                                <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
-                                <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
-                            </div>
-                        </div>
-                    </div>
-                    <a *ngIf="mydata.length > 0" class="carousel-control left" href="#myCarousel"
-                        data-slide="prev">&lsaquo;</a>
-                    <a *ngIf="mydata.length > 0" class="carousel-control right" href="#myCarousel"
-                        data-slide="next">&rsaquo;</a>
-                </div>
-            </ng-container>
-            <mat-card-content>
-                <app-content></app-content>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-button (click)="uploadMedia()">Post</button>
-            </mat-card-actions>
-        </mat-card>
-    </div>
-</div>
-  -->
 <div class="container">
     <div class="container_wrap">
         <mat-card class="example-card">
@@ -42,43 +7,77 @@
             <div>
                 <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
             </div>
-            <!-- <ngx-slick-carousel class="carousel" [config]="slickCarouselOptions">
-                <div *ngFor="let list of mydata">
-                    <div class="img-video-div">
-                        <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
-                        <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
-                    </div>
-                </div>
-            </ngx-slick-carousel> -->
-            <div>
-                <div class="carousel">
-                    <ul class="slides">
-                        <input type="radio" name="radio-buttons" id="img-1" checked />
-                        <li class="slide-container" *ngFor="let list of mydata; let i = index">
-                            <div class="slide-image">
+            <ng-container>
+                <div>
+                    <div class="post-create">
+                        <div class="item" [ngClass]="{'active': i == 0}" *ngFor="let list of mydata;let i = index">
+                            <div class="img-video-div">
                                 <img mat-card-image *ngIf="list.type == 'img'" [src]="list.url" />
                                 <video *ngIf="list.type == 'video'" [src]="list.url" controls></video>
                             </div>
-                            <div class="carousel-controls">
-                                <label *ngIf="mydata.length>0" class="prev-slide">
-                                    <span>&lsaquo;</span>
-                                </label>
-                                <label *ngIf="mydata.length>0" class="next-slide">
-                                    <span>&rsaquo;</span>
-                                </label>
-                            </div>
-                        </li>
-                        <div class="carousel-dots">
-                            <label *ngIf="" class="carousel-dot" id="img-dot-1"></label>
                         </div>
-                    </ul>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="frame-box">
+                                            <div class="card-text padding">
+                                                <p *ngIf="writeText"> You: {{ writeText.text }} </p>
+                                                <p *ngIf="cardText"> AL: {{ cardText.response }} <button
+                                                        class="copy-button" (click)="copyResponse(cardText.response)"
+                                                        [disabled]="isCopied"> {{ isCopied ? 'Copied' : 'Copy' }} <svg
+                                                            stroke="currentColor" fill="none" stroke-width="2"
+                                                            viewBox="0 0 24 24" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="h-4 w-4" height="1em"
+                                                            width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                                            </path>
+                                                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                                        </svg>
+                                                    </button>
+                                                </p>
+                                                <br>
+                                            </div>
+                                            <div><img src="../../assets/ZNeT.gif" *ngIf="showSpinner" width="50px"
+                                                    height="50px">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <textarea tabindex="0" data-id="request-:R1dd6:-19" rows="1"
+                                            placeholder="Write a app-content." class="textWriteArea"
+                                            [(ngModel)]="textList[0].text"
+                                            (keyup.enter)="generateText(textList)"></textarea>
+                                        <br>
+                                        <button type="button" class="generate-response" (click)="generateText(textList)"
+                                            [disabled]="isButtonDisabled">
+                                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+                                                stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"
+                                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <mat-card-content>
-                <app-content></app-content>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-button (click)="uploadMedia()">Post</button>
+            </ng-container>
+            <mat-card-actions *ngIf="mydata">
+                <button mat-button color="primary" (click)="post()">Post Now</button>
+                <!-- <share-buttons [theme]="'circles-dark'" [include]="['facebook','twitter','linkedin','whatsapp','copy']"
+                    [show]="9" [size]="1" [url]="'https://www.eduforbetterment.com/generate-qr-code-in-angular/'"
+                    [image]="mydata" [autoSetMeta]="false"></share-buttons>-->
+                <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">Clicck </fb:login-button>
+                <div id="status">
+                    <div class="fb-like" [attr.data-href]="url" data-layout="button_count" data-action="like"
+                        data-show-faces="true" data-share="true"></div>
+                </div>
             </mat-card-actions>
         </mat-card>
     </div>

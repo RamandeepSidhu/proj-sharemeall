@@ -29,7 +29,6 @@ export class ContentComponent {
         this.cardText = this.textList.find(f => f.response);
         this.writeText = this.textList.find(f => f.text);
         this.showSpinner = false;
-        // this.textList[0].text = '';
         this.isCopied = false;
 
       });
