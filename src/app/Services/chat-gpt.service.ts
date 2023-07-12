@@ -7,7 +7,7 @@ import { Configuration, OpenAIApi } from 'openai';
 export class ChatGptService {
   private openai: OpenAIApi;
   configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
   });
 
   constructor() {

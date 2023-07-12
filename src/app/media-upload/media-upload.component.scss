@@ -87,12 +87,11 @@
 }
 .textWriteArea {
   height: 41px;
-  width: 99%;
+  width: 99% !important;
   nav-index: 0;
   position: relative;
   grid-row: 1;
   padding: 0.25rem;
-  width: 100%;
   max-height: 200px;
   overflow-y: hidden;
   font-size: 16px;
