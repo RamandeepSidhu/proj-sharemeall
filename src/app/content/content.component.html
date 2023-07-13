@@ -1,50 +1,35 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8">
-                            <div class="frame-box">
-                                <div class="card-text padding">
-                                    <p *ngIf="writeText"> You: {{ writeText.text }} </p>
-                                    <p *ngIf="cardText"> AL: {{ cardText.response }} <button class="copy-button"
-                                            (click)="copyResponse(cardText.response)" [disabled]="isCopied"> {{ isCopied
-                                            ? 'Copied' : 'Copy' }} <svg stroke="currentColor" fill="none"
-                                                stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
-                                                stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                                </path>
-                                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                                            </svg>
-                                        </button>
-                                    </p>
-                                    <br>
-                                </div>
-                                <div><img src="../../assets/ZNeT.gif" *ngIf="showSpinner" width="50px" height="50px">
-                                </div>
-                            </div>
-                            <br>
-                            <textarea tabindex="0" data-id="request-:R1dd6:-19" rows="1"
-                                placeholder="Write a app-content." class="textWriteArea" [(ngModel)]="textList[0].text"
-                                (keyup.enter)="generateText(textList)"></textarea>
-                            <br>
-                            <button type="button" class="generate-response" (click)="generateText(textList)"
-                                [disabled]="isButtonDisabled">
-                                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
-                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1" height="1em"
-                                    width="1em" xmlns="http://www.w3.org/2000/svg">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+        <div class="col-md-5">
+            <h3>File Upload App</h3>
+            <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+                <div class="form-group">
+                    <label for="file">File</label>
+                    <input formControlName="file" id="file" type="file" class="form-control" multiple=""
+                        (change)="onFileChange($event)">
                 </div>
-            </div>
+                <img *ngFor='let url of images' [src]="url" height="150" width="200px" style="margin: 3px;"> <br />
+                <!-- <button class="btn btn-primary" type="submit">Submit</button> -->
+            </form>
         </div>
+        <div class="row col-md-5">
+            <h3>ChatGPT</h3>
+            <div *ngFor="let message of messages">
+                <p>{{ message }}</p>
+            </div>
+            <form (ngSubmit)="sendMessage()">
+                <input [(ngModel)]="userMessage" name="userMessage" placeholder="Type a message" required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        <br>
+        <div class="row col-md-2">
+            <h3>Upload To Scoial Media</h3>
+            <button class="fb-like" data-share="true" data-width="450" data-show-faces="true"
+                class="btn btn btn-primary" data-share="true" data-show-faces="true" *ngIf="!facebookUserAccessToken"
+                (click)="logInToFB()">Login With FaceBook</button>
+        </div>
+        <button (click)="shareInstagramPost()" class="btn btn btn-primary" *ngIf="facebookUserAccessToken">Post To
+            Instagram</button>
     </div>
 </div>

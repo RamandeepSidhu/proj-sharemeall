@@ -20,9 +20,7 @@
                         </div>
                     </div>
                     <!-- <button class="button">#Hashtags</button> -->
-                    <button class="button" (click)="toggleAIAssist()"> AI Assist <span
-                            class='material-icons'>auto_awesome</span>
-                    </button>
+                    <button class="button" (click)="toggleAIAssist()"> AI Assist </button>
                     <div class="character-count">{{ remainingWords }} words remaining</div>
                 </div>
             </div>
@@ -102,8 +100,12 @@
                 <input type="file" id="fileInput" accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
             </div>
             <mat-card-actions *ngIf="mydata">
-                <button mat-button color="primary" (click)="addPost(cardText.response)">Publish</button>
+                <button mat-button color="primary" (click)="post()">Publish</button>
             </mat-card-actions>
+            <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout=""
+                data-size="">
+                <a id="shareButton" target="_blank" href="#" class="fb-xfbml-parse-ignore">Share</a>
+            </div>
         </mat-card>
     </div>
 </div>

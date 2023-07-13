@@ -5,6 +5,7 @@
   .post-create {
     display: flex;
     justify-content: space-between;
+    margin-top: 15px;
   }
   .img-video-div {
     margin-right: 10px;
@@ -41,7 +42,7 @@
   }
 
   .textbox {
-    width: 300px;
+    width: 96%;
     height: 200px;
     resize: none;
     padding: 10px;
@@ -107,11 +108,16 @@
   .dropdown:hover .dropdown-content {
     display: block;
   }
+  textarea.textbox.ng-valid.ng-dirty.ng-touched {
+    width: 96%;
+  }
   span.material-icons {
     font-size: 19px;
     height: 0px;
     position: relative;
-    right: -5px;
+    right: 10px;
+    top: -28px;
+    cursor: pointer;
   }
 }
 input#fileInput {

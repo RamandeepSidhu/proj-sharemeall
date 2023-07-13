@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Configuration, OpenAIApi } from 'openai';
+import { Configuration, CreateCompletionRequest, CreateCompletionResponse, OpenAIApi } from 'openai';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,7 @@ import { Configuration, OpenAIApi } from 'openai';
 export class ChatGptService {
   private openai: OpenAIApi;
   configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
   });
 
   constructor() {
@@ -25,5 +25,30 @@ export class ChatGptService {
       return '';
     });
   }
+  async sendMessage(message: string): Promise<string> {
+    const prompt = 'User: ' + message + '\nAI:';
+    const requestPayload: CreateCompletionRequest = {
+      model: 'davinci', // Replace with the desired model, e.g., 'davinci' or 'curie'
+      prompt,
+      max_tokens: 50 // Adjust the number of tokens as needed
+    };
+    console.log(message);
+    try {
+      const response = await this.openai.createCompletion(requestPayload, { responseType: 'json' });
+      console.log(response);
+      const completion: CreateCompletionResponse = response.data;
+      if (completion && completion.choices && completion.choices.length > 0) {
+        const firstChoice = completion.choices[0];
 
+        if (firstChoice && firstChoice.text) {
+          return firstChoice.text.trim();
+        }
+      }
+
+      throw new Error('Empty completion');
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      return 'Oops, something went wrong.';
+    }
+  }
 }
