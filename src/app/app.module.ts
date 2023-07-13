@@ -9,12 +9,14 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
+import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MediaUploadComponent,
-    ContentComponent
+    ContentComponent,
+    PrivcayPolicayComponent
   ],
   imports: [
     BrowserModule,

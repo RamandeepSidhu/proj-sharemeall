@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MediaUploadComponent } from './media-upload/media-upload.component';
-import { ContentComponent } from './content/content.component';
+import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.component';
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
-  { path: 'post', component: MediaUploadComponent },
-  { path: 'content', component: ContentComponent },
-];
+  // { path: '', component: AppComponent },
+  { path: 'privacy-policy', component: PrivcayPolicayComponent },
+  { path: 'media', component: MediaUploadComponent }
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
