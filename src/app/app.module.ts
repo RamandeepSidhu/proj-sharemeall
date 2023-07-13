@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.compo
     BrowserAnimationsModule,
     SlickCarouselModule,
     MatButtonModule,
+    MatIconModule
 
   ],
   providers: [],

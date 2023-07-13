@@ -13,13 +13,21 @@ export class textResponse {
 export class MediaUploadComponent {
   mydata: { url: string; type: string; name?: string }[] = [];
   isButtonDisabled!: false;
-  isCopied: boolean = false;
+  isPostAdded: boolean = false;
 
+  isCopied: boolean = false;
+  bioText: string = '';
+  remainingWords: number = 350;
   textList: textResponse[] = [{ sno: 1, text: '', response: '' }];
   showSpinner = false;
   cardText: any;
   writeText!: any;
-  constructor(private openaiService: ChatGptService) { }
+  isAIAssistOpen: boolean = false;
+  hashtags = [
+    { id: "spread", value: "#spread", color: 3, twitter: "8", instagram: null },
+    { id: "forget", value: "#forget", color: 3, twitter: "8", instagram: null },
+    // Add more hashtags here
+  ]; constructor(private openaiService: ChatGptService) { }
 
   onSelectFile(event: any) {
     const files = event.target.files;
@@ -69,11 +77,14 @@ export class MediaUploadComponent {
     this.showSpinner = true;
     const generatedTextPromises = dataList.map((data: textResponse) => {
       return this.openaiService.generateText(data.text).then((text: any) => {
+        console.log(text)
         data.response = text;
         this.textList.unshift({ sno: 0, text: data.text, response: text });
         this.cardText = this.textList.find(f => f.response);
         this.writeText = this.textList.find(f => f.text);
         this.isCopied = false;
+        this.filterHashtags();
+
         return { text, response: text };
       });
     });
@@ -88,6 +99,7 @@ export class MediaUploadComponent {
         console.error('Failed to generate text:', error);
         this.showSpinner = false;
       });
+
   }
 
   copyResponse(response: string) {
@@ -110,6 +122,75 @@ export class MediaUploadComponent {
 
     window.open(authorizationUrl, '_blank');
   }
-  @Input() url = location.href;
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    const dragDropLabel: any = document.getElementById("dragDropLabel");
+    dragDropLabel.classList.add("highlight");
+  }
 
+  onDragLeave(event: DragEvent): void {
+    const dragDropLabel: any = document.getElementById("dragDropLabel");
+    dragDropLabel.classList.remove("highlight");
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const dragDropLabel: any = document.getElementById("dragDropLabel");
+    dragDropLabel.classList.remove("highlight");
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    const files = event.dataTransfer?.files;
+    if (files) {
+      fileInput.files = files;
+    }
+  }
+  updateCharacterCount() {
+    const words = this.bioText.trim().split(/\s+/);
+    const wordCount = words.length;
+
+    this.remainingWords = this.remainingWords - wordCount;
+  }
+  toggleAIAssist() {
+    this.isAIAssistOpen = !this.isAIAssistOpen;
+    this.isPostAdded = !this.isPostAdded;
+
+  }
+  // Inside MediaUploadComponent class
+  addPost(response: string) {
+
+    this.bioText += response; // Append the response to the bioText
+    this.isPostAdded = true;
+    this.isAIAssistOpen = !this.isAIAssistOpen;
+
+
+
+  }
+
+  isHashtagDropdownOpen = false;
+  searchTerm = "";
+  filteredHashtags: any = [];
+
+  toggleHashtagDropdown() {
+    this.isHashtagDropdownOpen = !this.isHashtagDropdownOpen;
+    if (this.isHashtagDropdownOpen) {
+      this.filterHashtags();
+    }
+  }
+
+  filterHashtags() {
+    this.filteredHashtags = this.hashtags.filter(
+      (hashtag) => hashtag.value.toLowerCase().includes(this.searchTerm.toLowerCase())
+        || this.bioText.toLowerCase().includes(hashtag.value.toLowerCase())
+    );
+  }
+
+  truncateText(text: string, wordLimit: number): string {
+    const words = text.trim().split(/\s+/);
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(' ') + '...';
+    }
+    return text;
+  }
+  selectHashtag(hashtag: { value: string; }) {
+    this.bioText += " " + hashtag.value;
+  }
 }

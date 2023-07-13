@@ -4,8 +4,27 @@
             <mat-card-header>
                 <mat-card-title>Post Create</mat-card-title>
             </mat-card-header>
-            <div>
-                <input type='file' accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+            <div class="text-box" *ngIf="!isAIAssistOpen">
+                <textarea class="textbox" [(ngModel)]="bioText" (input)="updateCharacterCount()"></textarea>
+                <div class="button-container">
+                    <div class="dropdown">
+                        <button class="button" (click)="toggleHashtagDropdown()">#Hashtags</button>
+                        <div class="dropdown-content" *ngIf="isHashtagDropdownOpen">
+                            <input type="text" [(ngModel)]="searchTerm" (input)="filterHashtags()"
+                                placeholder="Search Hashtags" />
+                            <button (click)="generateText([textList[0]])">Search AI</button>
+                            <div *ngFor="let hashtag of textList">
+                                <span (click)="addPost(cardText.response)"> #{{ cardText.response }} - {{
+                                    truncateText(hashtag.response, 4) }} </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <button class="button">#Hashtags</button> -->
+                    <button class="button" (click)="toggleAIAssist()"> AI Assist <span
+                            class='material-icons'>auto_awesome</span>
+                    </button>
+                    <div class="character-count">{{ remainingWords }} words remaining</div>
+                </div>
             </div>
             <ng-container>
                 <div>
@@ -17,62 +36,73 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class="card">
+                    <div class="card">
+                        <div class="col-md-12" *ngIf="isAIAssistOpen">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-8">
-                                        <div class="frame-box">
-                                            <div class="card-text padding">
-                                                <p *ngIf="writeText"> You: {{ writeText.text }} </p>
-                                                <p *ngIf="cardText"> AL: {{ cardText.response }} <button
-                                                        class="copy-button" (click)="copyResponse(cardText.response)"
-                                                        [disabled]="isCopied"> {{ isCopied ? 'Copied' : 'Copy' }} <svg
-                                                            stroke="currentColor" fill="none" stroke-width="2"
-                                                            viewBox="0 0 24 24" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="h-4 w-4" height="1em"
-                                                            width="1em" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                                            </path>
-                                                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                                                        </svg>
-                                                    </button>
-                                                </p>
-                                                <br>
+                                <div class="close-button">
+                                    <span class='material-icons' (click)="toggleAIAssist()">close</span>
+                                    <div class="row">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-8">
+                                            <div class="frame-box">
+                                                <div class="card-text padding">
+                                                    <p *ngIf="writeText"> You: {{ writeText.text }} </p>
+                                                    <p *ngIf="cardText"> AL: {{ cardText.response }} <button
+                                                            class="copy-button"
+                                                            (click)="copyResponse(cardText.response)"
+                                                            [disabled]="isCopied"> {{ isCopied ? 'Copied' : 'Copy' }}
+                                                            <svg stroke="currentColor" fill="none" stroke-width="2"
+                                                                viewBox="0 0 24 24" stroke-linecap="round"
+                                                                stroke-linejoin="round" class="h-4 w-4" height="1em"
+                                                                width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                                                </path>
+                                                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1">
+                                                                </rect>
+                                                            </svg>
+                                                        </button>
+                                                    </p>
+                                                    <br>
+                                                </div>
+                                                <div><img src="../../assets/ZNeT.gif" *ngIf="showSpinner" width="50px"
+                                                        height="50px">
+                                                </div>
                                             </div>
-                                            <div><img src="../../assets/ZNeT.gif" *ngIf="showSpinner" width="50px"
-                                                    height="50px">
-                                            </div>
+                                            <br>
+                                            <textarea tabindex="0" data-id="request-:R1dd6:-19" rows="1"
+                                                placeholder="Write a app-content." class="textWriteArea"
+                                                [(ngModel)]="textList[0].text"
+                                                (keyup.enter)="generateText(textList)"></textarea>
+                                            <br>
+                                            <button type="button" class="generate-response"
+                                                (click)="generateText(textList)" [disabled]="isButtonDisabled">
+                                                <svg stroke="currentColor" fill="none" stroke-width="2"
+                                                    viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-4 w-4 mr-1" height="1em" width="1em"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <br>
-                                        <textarea tabindex="0" data-id="request-:R1dd6:-19" rows="1"
-                                            placeholder="Write a app-content." class="textWriteArea"
-                                            [(ngModel)]="textList[0].text"
-                                            (keyup.enter)="generateText(textList)"></textarea>
-                                        <br>
-                                        <button type="button" class="generate-response" (click)="generateText(textList)"
-                                            [disabled]="isButtonDisabled">
-                                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
-                                                stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"
-                                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                            </svg>
-                                        </button>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="button-containe" *ngIf="isPostAdded">
+                                <button class="button" (click)="addPost(cardText.response)">Add Post</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </ng-container>
+            <div class="select-file">
+                <label for="fileInput" class="isBold colorGray" id="dragDropLabel">Click or Drag &amp; Drop
+                    media</label>
+                <input type="file" id="fileInput" accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+            </div>
             <mat-card-actions *ngIf="mydata">
-                <button mat-button color="primary" (click)="post()">Post Now</button>
-                <!-- <share-buttons [theme]="'circles-dark'" [include]="['facebook','twitter','linkedin','whatsapp','copy']"
-                    [show]="9" [size]="1" [url]="'https://www.eduforbetterment.com/generate-qr-code-in-angular/'"
-                    [image]="mydata" [autoSetMeta]="false"></share-buttons> -->
+                <button mat-button color="primary" (click)="addPost(cardText.response)">Publish</button>
             </mat-card-actions>
         </mat-card>
     </div>
