@@ -247,10 +247,17 @@ export class MediaUploadComponent {
   selectHashtag(hashtag: { value: string; }) {
     this.bioText += " " + hashtag.value;
   }
-  initFacebookSDK() {
+
+  ngOnInit() {
+    this.loadFacebookSDK();
+    this.checkLoginState();
+  }
+  status: string = '';
+
+  loadFacebookSDK() {
     (window as any).fbAsyncInit = function () {
       FB.init({
-        appId: '250342871108791',
+        appId: '1967700373565384',
         xfbml: true,
         version: 'v17.0'
       });
@@ -262,10 +269,34 @@ export class MediaUploadComponent {
       if (d.getElementById(id)) { return; }
       js = d.createElement(s) as HTMLScriptElement;
       js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=250342871108791&autoLogAppEvents=1';
       if (fjs && fjs.parentNode) {
         fjs.parentNode.insertBefore(js, fjs);
       }
     }(document, 'script', 'facebook-jssdk'));
+  }
+
+  checkLoginState() {
+    FB.getLoginStatus((response: any) => {
+      this.statusChangeCallback(response);
+    });
+  }
+
+  statusChangeCallback(response: any) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    if (response.status === 'connected') {
+      this.testAPI();
+    } else {
+      this.status = 'Please log into this webpage.';
+    }
+  }
+
+  testAPI() {
+    console.log('Welcome! Fetching your information....');
+    FB.api('/me', (response: any) => {
+      console.log('Successful login for: ' + response.name);
+      this.status = 'Thanks for logging in, ' + response.name + '!';
+    });
   }
 }

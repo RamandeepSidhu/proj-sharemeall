@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <button class="button" (click)="toggleAIAssist()"> AI Assist </button>
-                    <div class="character-count"> {{myInput.value.length}} /{{remainingWords}}words remaining</div>
+                    <div class="character-count"> {{myInput.value.length}} /{{remainingWords}} words remaining</div>
                 </div>
             </div>
             <ng-container>
@@ -101,10 +101,6 @@
             <mat-card-actions *ngIf="mydata">
                 <button mat-button color="primary" (click)="post()">Publish</button>
             </mat-card-actions>
-            <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout=""
-                data-size="">
-                <a id="shareButton" target="_blank" href="#" class="fb-xfbml-parse-ignore">Share</a>
-            </div>
         </mat-card>
     </div>
 </div>
