@@ -30,6 +30,8 @@ export class MediaUploadComponent {
     // Add more hashtags here
   ]; myNewData: any;
   shareLink: any;
+  newTextList: textResponse[] = [{ sno: 1, text: '', response: '' }];
+  hastageCardText: any;
   constructor(private openaiService: ChatGptService) { }
 
   onSelectFile(event: any) {
@@ -47,30 +49,6 @@ export class MediaUploadComponent {
     }
   }
 
-  // post() {
-  //   setTimeout(() => {
-  //     this.authorizeInstagram();
-  //     localStorage.setItem('mydata', JSON.stringify(this.mydata));
-  //     const dataList: textResponse[] = []; // Replace this with your actual dataList
-  //     const generatedTextPromises = dataList.map((data: textResponse) => {
-  //       return this.openaiService.generateText(data.text).then((text: any) => {
-  //         data.response = text;
-  //         return data;
-  //       });
-  //     });
-  //     localStorage.setItem('mydata', JSON.stringify(this.mydata.map(item => ({ url: item.url ?? '', type: item.type }))));
-
-  //     Promise.all(generatedTextPromises)
-  //       .then((generatedTexts) => {
-  //         localStorage.setItem('generatedTexts', JSON.stringify(generatedTexts));
-  //         this.mydata = [];
-  //       })
-  //       .catch((error) => {
-  //         console.error('Failed to generate text:', error);
-  //         this.mydata = [];
-  //       });
-  //   }, 2000);
-  // }
   post() {
     setTimeout(() => {
       this.authorizeInstagram();
@@ -105,13 +83,41 @@ export class MediaUploadComponent {
     }, 2000);
   }
 
-
-
-
-  // ChatGPT
-  generateText(dataList: textResponse[]) {
+  hastageText(dataList: textResponse[], searchText: any) {
     this.showSpinner = true;
     const generatedTextPromises = dataList.map((data: textResponse) => {
+      const prompt = 'User: ' + searchText + '\nAI:';
+      return this.openaiService.generateText(prompt).then((text: any) => {
+        console.log(text);
+        data.response = text;
+        this.newTextList.unshift({ sno: 0, text: data.text, response: text });
+        this.hastageCardText = this.newTextList.find(f => f.response);
+        this.writeText = this.newTextList.find(f => f.text);
+        this.filterHashtags();
+        return { text, response: text };
+      });
+    });
+
+    Promise.all(generatedTextPromises).then((results: any[]) => {
+      const hashtagResponses = results.filter((result) => {
+        const response = result.response.toLowerCase();
+        return response.startsWith('#') || response.includes(' #');
+      });
+
+      this.hashtags = hashtagResponses.map((result) => {
+        return result.response;
+      });
+
+      this.filterHashtags();
+    });
+  }
+
+  // ChatGPT
+  generateText(dataList: textResponse[], searchText: any) {
+    this.showSpinner = true;
+    const generatedTextPromises = dataList.map((data: textResponse) => {
+      const prompt = 'User: ' + searchText + '\nAI:';
+
       return this.openaiService.generateText(data.text).then((text: any) => {
         console.log(text)
         data.response = text;
@@ -175,34 +181,46 @@ export class MediaUploadComponent {
       fileInput.files = files;
     }
   }
+
   updateCharacterCount() {
     const words = this.bioText.trim().split(/\s+/);
     const wordCount = words.length;
-
     if (this.bioText.length === 0) {
       this.remainingWords = 350;
     } else {
-      this.remainingWords = Math.max(0, this.remainingWords - wordCount);
+      this.remainingWords = Math.max(0, 350 - wordCount);
     }
   }
+
+  addPost(response: string) {
+    const words = response.trim().split(/\s+/);
+    const wordCount = words.length;
+    if (wordCount > 350) {
+      this.bioText = words.slice(0, 350).join(' ');
+    } else {
+      this.bioText += response;
+    }
+    // this.bioText += response;
+    this.isPostAdded = true;
+    this.isAIAssistOpen = !this.isAIAssistOpen;
+    // this.remainingWords = Math.max(0, this.remainingWords - wordCount);
+    this.updateCharacterCount();
+
+  }
+
+
+
   toggleAIAssist() {
     this.isAIAssistOpen = !this.isAIAssistOpen;
     this.isPostAdded = !this.isPostAdded;
 
   }
-  // Inside MediaUploadComponent class
-  addPost(response: string) {
 
-    this.bioText += response; // Append the response to the bioText
-    this.isPostAdded = true;
-    this.isAIAssistOpen = !this.isAIAssistOpen;
-
-
-
+  addHashtagToBio(hashtag: string) {
+    this.bioText += ' ' + hashtag;
   }
-
   isHashtagDropdownOpen = false;
-  searchTerm = "";
+  searchTerm: any = "";
   filteredHashtags: any = [];
 
   toggleHashtagDropdown() {

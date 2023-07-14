@@ -5,23 +5,22 @@
                 <mat-card-title>Post Create</mat-card-title>
             </mat-card-header>
             <div class="text-box" *ngIf="!isAIAssistOpen">
-                <textarea class="textbox" [(ngModel)]="bioText" (input)="updateCharacterCount()"></textarea>
+                <textarea class="textbox" #myInput [(ngModel)]="bioText" [maxlength]="remainingWords"></textarea>
                 <div class="button-container">
                     <div class="dropdown">
                         <button class="button" (click)="toggleHashtagDropdown()">#Hashtags</button>
                         <div class="dropdown-content" *ngIf="isHashtagDropdownOpen">
                             <input type="text" [(ngModel)]="searchTerm" (input)="filterHashtags()"
                                 placeholder="Search Hashtags" />
-                            <button (click)="generateText([textList[0]])">Search AI</button>
-                            <div *ngFor="let hashtag of textList">
-                                <span (click)="addPost(cardText.response)"> #{{ cardText.response }} - {{
+                            <button (click)="hastageText([newTextList[0]],searchTerm)">Search AI</button>
+                            <div *ngFor="let hashtag of newTextList">
+                                <span (click)="addHashtagToBio(hashtag.response)"> {{ hastageCardText.response }} - {{
                                     truncateText(hashtag.response, 4) }} </span>
                             </div>
                         </div>
                     </div>
-                    <!-- <button class="button">#Hashtags</button> -->
                     <button class="button" (click)="toggleAIAssist()"> AI Assist </button>
-                    <div class="character-count">{{ remainingWords }} words remaining</div>
+                    <div class="character-count"> {{myInput.value.length}} /{{remainingWords}}words remaining</div>
                 </div>
             </div>
             <ng-container>
@@ -71,10 +70,10 @@
                                             <textarea tabindex="0" data-id="request-:R1dd6:-19" rows="1"
                                                 placeholder="Write a app-content." class="textWriteArea"
                                                 [(ngModel)]="textList[0].text"
-                                                (keyup.enter)="generateText(textList)"></textarea>
-                                            <br>
+                                                (keyup.enter)="generateText([textList[0]], $event)"></textarea>
                                             <button type="button" class="generate-response"
-                                                (click)="generateText(textList)" [disabled]="isButtonDisabled">
+                                                (click)="generateText([textList[0]],  $event)"
+                                                [disabled]="isButtonDisabled">
                                                 <svg stroke="currentColor" fill="none" stroke-width="2"
                                                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
                                                     class="h-4 w-4 mr-1" height="1em" width="1em"

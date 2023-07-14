@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { MediaUploadComponent } from './media-upload/media-upload.component';
 import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.component';
 import { AppComponent } from './app.component';
+import { ContentComponent } from './content/content.component';
 
 const routes: Routes = [
-  // { path: '', component: AppComponent },
+  { path: 'new-media', component: ContentComponent },
   { path: 'privacy-policy', component: PrivcayPolicayComponent },
   { path: 'media', component: MediaUploadComponent }
 ]

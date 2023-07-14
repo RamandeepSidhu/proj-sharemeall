@@ -17,10 +17,8 @@ export class ContentComponent {
   description: string = '';
   userMessage!: string;
   messages: string[] = [];
-  // mydata: { url: string; type: string }[] = [];
   formData: FormData = new FormData();
 
-  private apiUrl = 'https://api.instagram.com/';
 
   constructor(private http: HttpClient, private chatService: ChatGptService,) {
     this.initFacebookSDK();

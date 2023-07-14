@@ -12,13 +12,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { PrivcayPolicayComponent } from './privcay-policay/privcay-policay.component';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
-
+import { FilterPipe } from './Services/filter-list.pipe';
 @NgModule({
   declarations: [
     AppComponent,
     MediaUploadComponent,
     ContentComponent,
-    PrivcayPolicayComponent
+    PrivcayPolicayComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -32,6 +33,8 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+
+
 
   ],
   providers: [],
