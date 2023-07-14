@@ -62,15 +62,6 @@ export class MediaUploadComponent {
       });
       localStorage.setItem('mydata', JSON.stringify(this.mydata.map(item => ({ url: item.url ?? '', type: item.type }))));
 
-      const imageUrl = this.mydata[0]?.url; // Get the image URL
-      const generatedTextsValue = localStorage.getItem('generatedTexts'); // Get the generated texts
-
-      this.shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(generatedTextsValue || '')}&picture=${encodeURIComponent(imageUrl || '')}`;
-
-      console.log(this.shareLink);
-
-      window.open(this.shareLink, '_blank');
-
       Promise.all(generatedTextPromises)
         .then((generatedTexts) => {
           localStorage.setItem('generatedTexts', JSON.stringify(generatedTexts));
@@ -81,6 +72,13 @@ export class MediaUploadComponent {
           this.mydata = [];
         });
     }, 2000);
+    const dataStore = {
+      text: this.bioText,
+      bio: this.mydata
+    };
+
+    console.log(dataStore);
+
   }
 
   hastageText(dataList: textResponse[], searchText: any) {
@@ -160,6 +158,23 @@ export class MediaUploadComponent {
 
     window.open(authorizationUrl, '_blank');
   }
+
+  // authorizeInstagram() {
+  //   const dataStore = {
+  //     text: this.bioText,
+  //     bio: this.mydata
+  //   };
+
+  //   const queryString = encodeURIComponent(JSON.stringify(dataStore));
+
+  //   const authorizationUrl =
+  //     'https://www.instagram.com/accounts/login/?force_authentication=1&enable_fb_login=1&next=%2Foauth%2Fauthorize%2F%3Fredirect_uri%3Dhttps%3A%2F%2Fdevelopers.facebook.com%2Finstagram%2Ftoken_generator%2Foauth%2F%26client_id%3D670732831755066%26response_type%3Dcode%26scope%3Duser_profile%2Cuser_media%26state%3D' +
+  //     queryString +
+  //     '%26logger_id%3D277dfd7e-3839-4ff9-b48e-248f6c68cd1d';
+
+  //   window.open(authorizationUrl, '_blank');
+  // }
+
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     const dragDropLabel: any = document.getElementById("dragDropLabel");
@@ -208,8 +223,6 @@ export class MediaUploadComponent {
 
   }
 
-
-
   toggleAIAssist() {
     this.isAIAssistOpen = !this.isAIAssistOpen;
     this.isPostAdded = !this.isPostAdded;
@@ -249,54 +262,6 @@ export class MediaUploadComponent {
   }
 
   ngOnInit() {
-    this.loadFacebookSDK();
-    this.checkLoginState();
-  }
-  status: string = '';
-
-  loadFacebookSDK() {
-    (window as any).fbAsyncInit = function () {
-      FB.init({
-        appId: '1967700373565384',
-        xfbml: true,
-        version: 'v17.0'
-      });
-      FB.AppEvents.logPageView();
-    };
-
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) { return; }
-      js = d.createElement(s) as HTMLScriptElement;
-      js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=250342871108791&autoLogAppEvents=1';
-      if (fjs && fjs.parentNode) {
-        fjs.parentNode.insertBefore(js, fjs);
-      }
-    }(document, 'script', 'facebook-jssdk'));
-  }
-
-  checkLoginState() {
-    FB.getLoginStatus((response: any) => {
-      this.statusChangeCallback(response);
-    });
-  }
-
-  statusChangeCallback(response: any) {
-    console.log('statusChangeCallback');
-    console.log(response);
-    if (response.status === 'connected') {
-      this.testAPI();
-    } else {
-      this.status = 'Please log into this webpage.';
-    }
-  }
-
-  testAPI() {
-    console.log('Welcome! Fetching your information....');
-    FB.api('/me', (response: any) => {
-      console.log('Successful login for: ' + response.name);
-      this.status = 'Thanks for logging in, ' + response.name + '!';
-    });
+    this.post();
   }
 }

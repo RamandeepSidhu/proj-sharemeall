@@ -7,7 +7,7 @@ import { Configuration, CreateCompletionRequest, CreateCompletionResponse, OpenA
 export class ChatGptService {
   private openai: OpenAIApi;
   configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
   });
 
   constructor() {
