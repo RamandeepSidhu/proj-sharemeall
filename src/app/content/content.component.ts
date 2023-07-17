@@ -53,28 +53,6 @@ export class ContentComponent {
     return this.myForm.controls;
   }
 
-  // onSelectFile(event: any) {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     for (const file of files) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e: any) => {
-  //         if (file.type.indexOf("image") > -1) {
-  //           this.mydata.push({
-  //             url: e.target.result,
-  //             type: 'img'
-  //           });
-  //         } else if (file.type.indexOf("video") > -1) {
-  //           this.mydata.push({
-  //             url: e.target.result,
-  //             type: 'video'
-  //           });
-  //         }
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // }
 
   onFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
@@ -96,13 +74,12 @@ export class ContentComponent {
     }
   }
 
-  // https://api.instagram.com/oauth/authorize/?client_id=${Client_id}&redirect_uri=REDIRECT-URI&response_type=accessToken
   submitForm() {
     const accessToken = 'IGQVJXUUNBcGlJU3FvbnlVVkdUemlYTWJ3MXBHTVM1eGJ5NzRvUGVFVDNPb3p4azUwd2pZAR2ZAQQ0w2WGc3ZAkVyYWFRa1A4OHBtT1pnWk5Oa1UwTU5QVVkxeTk3TFBXNmlUTHh5cTBTVkNkZA0EwYW45awZDZD'; // Replace with your access token
     const caption = 'Chat-GPT answer goes here';
 
-    const client_secret = "479cc270137a3219592eef5e4932a2cb"
-    const Client_id = 1967700373565384
+    const client_secret = "441a387e57311a85288e058f5377bcae"
+    const Client_id = 250342871108791
     const client_Token = "eddcf52af595a422557f985df72c4778"
     const redirectUri = `https://localhost:4200/index.html#/${accessToken}`;
 
@@ -123,36 +100,7 @@ export class ContentComponent {
     );
   }
 
-  // onSelectFile(event: any) {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     for (const file of files) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e: any) => {
-  //         const blob = new Blob([e.target.result], { type: file.type });
-  //         this.mydata.push({
-  //           url: URL.createObjectURL(blob),
-  //           type: file.type
-  //         });
-  //         this.formData.append('files', blob, file.name); // Append the Blob object to the FormData
-  //       };
-  //       reader.readAsArrayBuffer(file);
-  //     }
-  //   }
-  // }
 
-
-
-
-  //  generateText(data:textResponse) {
-  //    this.openaiService.generateText(data.text).then(res => {
-  //     data.response = res;
-  //     if(this.textList.length===data.sno){
-  //       this.textList.push({sno:1,text:'',response:''});
-  //     }
-  //   });
-  // }
-  // 3064389983857861
 
   initFacebookSDK() {
     (window as any).fbAsyncInit = function () {
@@ -182,7 +130,6 @@ export class ContentComponent {
   facebookUserAccessToken: string | undefined;
 
   checkFacebookLoginStatus() {
-    debugger
     (window as any).FB.getLoginStatus((response: any) => {
       this.facebookUserAccessToken = response.authResponse?.accessToken;
     });
@@ -191,7 +138,6 @@ export class ContentComponent {
   logInToFB() {
     (window as any).FB.login((response: any) => {
       this.facebookUserAccessToken = response.authResponse?.accessToken;
-      debugger
     }, { scope: 'instagram_basic,pages_show_list' });
   }
 
@@ -261,50 +207,74 @@ export class ContentComponent {
       // Handle error
     }
   }
-  // loadFacebookSDK() {
-  //   (window as any).fbAsyncInit = function () {
-  //     FB.init({
-  //       appId: '1967700373565384',
-  //       xfbml: true,
-  //       version: 'v17.0'
-  //     });
-  //     FB.AppEvents.logPageView();
-  //   };
+  loadFacebookSDK() {
+    (window as any).fbAsyncInit = function () {
+      FB.init({
+        appId: '250342871108791',
+        xfbml: true,
+        version: 'v17.0'
+      });
+      FB.AppEvents.logPageView();
+    };
 
-  //   (function (d, s, id) {
-  //     var js, fjs = d.getElementsByTagName(s)[0];
-  //     if (d.getElementById(id)) { return; }
-  //     js = d.createElement(s) as HTMLScriptElement;
-  //     js.id = id;
-  //     js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=250342871108791&autoLogAppEvents=1';
-  //     if (fjs && fjs.parentNode) {
-  //       fjs.parentNode.insertBefore(js, fjs);
-  //     }
-  //   }(document, 'script', 'facebook-jssdk'));
-  // }
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s) as HTMLScriptElement;
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=250342871108791&autoLogAppEvents=1';
+      if (fjs && fjs.parentNode) {
+        fjs.parentNode.insertBefore(js, fjs);
+      }
+    }(document, 'script', 'facebook-jssdk'));
+  }
 
-  // checkLoginState() {
-  //   FB.getLoginStatus((response: any) => {
-  //     this.statusChangeCallback(response);
-  //   });
-  // }
+  checkLoginState() {
+    FB.getLoginStatus((response: any) => {
+      this.statusChangeCallback(response);
+    });
+  }
 
-  // statusChangeCallback(response: any) {
-  //   console.log('statusChangeCallback');
-  //   console.log(response);
-  //   if (response.status === 'connected') {
-  //     this.testAPI();
-  //   } else {
-  //     this.status = 'Please log into this webpage.';
-  //   }
-  // }
+  statusChangeCallback(response: any) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    if (response.status === 'connected') {
+      this.testAPI();
+    } else {
+    }
+  }
 
-  // testAPI() {
-  //   console.log('Welcome! Fetching your information....');
-  //   FB.api('/me', (response: any) => {
-  //     console.log('Successful login for: ' + response.name);
-  //     this.status = 'Thanks for logging in, ' + response.name + '!';
-  //   });
-  // }
+  testAPI() {
+    console.log('Welcome! Fetching your information....');
+    FB.api(
+      '/230689359885934',
+      'GET',
+      {},
+      function (response: any) {
+        console.log(response, ':::::::')
+      }
+    );
+  }
 
 }
+  // testAPI(accessToken: any) {
+  //   console.log(accessToken, 'acctoken')
+  //   console.log('Welcome! Fetching your information....');
+
+  //   const params = {
+  //     access_token: "EAADjr33njLcBAOzvB9sR1cvJDGaMHci4ZCGUAMXZCg6dir4paAeOZAyJ4S15fnxEZA5kVZA5zFLgwQJqMR6qF6Og55oKhBrvnmSKA8OXTNXk3pMRCQ4ZCyotgfb4HdO33Ike8ZC4cufn8xHrQlTOSbU6UTgpBi72OX5FZCEJyBaDoo5sKHZAdWFWZBxCVbExwWxqPxms20F8BZAeOYTdOulBkFTfZAYVpp3vZBOQvFou1tjUte626kT3MTi7k",
+  //   };
+
+  //   // FB.api('/230689359885934', 'GET', params, function (response: any) {
+  //   // });
+  //   FB.api(
+  //     '/230689359885934',
+  //     'POST',
+  //     params,
+  //     { "fields": "id,name,email,posts{instagram_eligibility,is_published},photos,videos{embed_html,description,status,video_insights}", "transport": "cors" },
+  //     function (respons: any) {
+  //       console.log(respons)
+  //     }
+  //   );
+
+  // }

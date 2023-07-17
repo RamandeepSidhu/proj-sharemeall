@@ -100,6 +100,7 @@
             </div>
             <mat-card-actions *ngIf="mydata">
                 <button mat-button color="primary" (click)="post()">Publish</button>
+                <button (click)="logInToFB($event)">Login with Facebook</button>
             </mat-card-actions>
         </mat-card>
     </div>

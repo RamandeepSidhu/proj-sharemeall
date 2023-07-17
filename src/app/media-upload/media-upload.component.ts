@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ChatGptService } from '../Services/chat-gpt.service';
+import { Token } from '@angular/compiler';
 export class textResponse {
   sno: number = 1;
   text: string = '';
@@ -15,7 +16,6 @@ export class MediaUploadComponent {
   mydata: { url: string; type: string; name?: string }[] = [];
   isButtonDisabled!: false;
   isPostAdded: boolean = false;
-
   isCopied: boolean = false;
   bioText: string = '';
   remainingWords: number = 350;
@@ -27,13 +27,16 @@ export class MediaUploadComponent {
   hashtags = [
     { id: "spread", value: "#spread", color: 3, twitter: "8", instagram: null },
     { id: "forget", value: "#forget", color: 3, twitter: "8", instagram: null },
-    // Add more hashtags here
-  ]; myNewData: any;
+  ];
+  myNewData: any;
   shareLink: any;
   newTextList: textResponse[] = [{ sno: 1, text: '', response: '' }];
   hastageCardText: any;
+  facebookUserAccessToken: any;
   constructor(private openaiService: ChatGptService) { }
-
+  ngOnInit() {
+    this.post();
+  }
   onSelectFile(event: any) {
     const files = event.target.files;
     if (files) {
@@ -47,38 +50,6 @@ export class MediaUploadComponent {
         reader.readAsDataURL(file);
       }
     }
-  }
-
-  post() {
-    setTimeout(() => {
-      this.authorizeInstagram();
-      localStorage.setItem('mydata', JSON.stringify(this.mydata));
-      const dataList: textResponse[] = []; // Replace this with your actual dataList
-      const generatedTextPromises = dataList.map((data: textResponse) => {
-        return this.openaiService.generateText(data.text).then((text: any) => {
-          data.response = text;
-          return data;
-        });
-      });
-      localStorage.setItem('mydata', JSON.stringify(this.mydata.map(item => ({ url: item.url ?? '', type: item.type }))));
-
-      Promise.all(generatedTextPromises)
-        .then((generatedTexts) => {
-          localStorage.setItem('generatedTexts', JSON.stringify(generatedTexts));
-          this.mydata = [];
-        })
-        .catch((error) => {
-          console.error('Failed to generate text:', error);
-          this.mydata = [];
-        });
-    }, 2000);
-    const dataStore = {
-      text: this.bioText,
-      bio: this.mydata
-    };
-
-    console.log(dataStore);
-
   }
 
   hastageText(dataList: textResponse[], searchText: any) {
@@ -159,44 +130,6 @@ export class MediaUploadComponent {
     window.open(authorizationUrl, '_blank');
   }
 
-  // authorizeInstagram() {
-  //   const dataStore = {
-  //     text: this.bioText,
-  //     bio: this.mydata
-  //   };
-
-  //   const queryString = encodeURIComponent(JSON.stringify(dataStore));
-
-  //   const authorizationUrl =
-  //     'https://www.instagram.com/accounts/login/?force_authentication=1&enable_fb_login=1&next=%2Foauth%2Fauthorize%2F%3Fredirect_uri%3Dhttps%3A%2F%2Fdevelopers.facebook.com%2Finstagram%2Ftoken_generator%2Foauth%2F%26client_id%3D670732831755066%26response_type%3Dcode%26scope%3Duser_profile%2Cuser_media%26state%3D' +
-  //     queryString +
-  //     '%26logger_id%3D277dfd7e-3839-4ff9-b48e-248f6c68cd1d';
-
-  //   window.open(authorizationUrl, '_blank');
-  // }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    const dragDropLabel: any = document.getElementById("dragDropLabel");
-    dragDropLabel.classList.add("highlight");
-  }
-
-  onDragLeave(event: DragEvent): void {
-    const dragDropLabel: any = document.getElementById("dragDropLabel");
-    dragDropLabel.classList.remove("highlight");
-  }
-
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    const dragDropLabel: any = document.getElementById("dragDropLabel");
-    dragDropLabel.classList.remove("highlight");
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    const files = event.dataTransfer?.files;
-    if (files) {
-      fileInput.files = files;
-    }
-  }
-
   updateCharacterCount() {
     const words = this.bioText.trim().split(/\s+/);
     const wordCount = words.length;
@@ -215,10 +148,8 @@ export class MediaUploadComponent {
     } else {
       this.bioText += response;
     }
-    // this.bioText += response;
     this.isPostAdded = true;
     this.isAIAssistOpen = !this.isAIAssistOpen;
-    // this.remainingWords = Math.max(0, this.remainingWords - wordCount);
     this.updateCharacterCount();
 
   }
@@ -226,7 +157,6 @@ export class MediaUploadComponent {
   toggleAIAssist() {
     this.isAIAssistOpen = !this.isAIAssistOpen;
     this.isPostAdded = !this.isPostAdded;
-
   }
 
   addHashtagToBio(hashtag: string) {
@@ -260,8 +190,75 @@ export class MediaUploadComponent {
   selectHashtag(hashtag: { value: string; }) {
     this.bioText += " " + hashtag.value;
   }
+  post() {
+    setTimeout(() => {
+      this.authorizeInstagram();
+      localStorage.setItem('mydata', JSON.stringify(this.mydata));
+      const dataList: textResponse[] = []; // Replace this with your actual dataList
+      const generatedTextPromises = dataList.map((data: textResponse) => {
+        return this.openaiService.generateText(data.text).then((text: any) => {
+          data.response = text;
+          return data;
+        });
+      });
+      localStorage.setItem('mydata', JSON.stringify(this.mydata.map(item => ({ url: item.url ?? '', type: item.type }))));
+      Promise.all(generatedTextPromises)
+        .then((generatedTexts) => {
+          localStorage.setItem('generatedTexts', JSON.stringify(generatedTexts));
+          this.mydata = [];
+        })
+        .catch((error) => {
+          console.error('Failed to generate text:', error);
+          this.mydata = [];
+        });
+    }, 2000);
+    const dataStore = {
+      text: this.bioText,
+      bio: this.mydata
+    };
+    this.logInToFB(dataStore);
 
-  ngOnInit() {
-    this.post();
+    console.log(dataStore, 'datagghgStore')
+  }
+
+  // facebook integration
+  checkLoginState() {
+    FB.getLoginStatus((response: any) => {
+      this.statusChangeCallback(response);
+    });
+  }
+
+  statusChangeCallback(response: any) {
+    console.log('statusChangeCallback');
+    if (response.status === 'connected') {
+      this.testAPI(response);
+    } else {
+      const statusElement = document.getElementById('status');
+      if (statusElement) {
+        statusElement.innerHTML = 'Please log into this webpage.';
+      }
+    }
+  }
+  testAPI(accessToken: any) {
+    console.log('Welcome! Fetching your information....');
+    const params = {
+      access_token: "EAADjr33njLcBAOzvB9sR1cvJDGaMHci4ZCGUAMXZCg6dir4paAeOZAyJ4S15fnxEZA5kVZA5zFLgwQJqMR6qF6Og55oKhBrvnmSKA8OXTNXk3pMRCQ4ZCyotgfb4HdO33Ike8ZC4cufn8xHrQlTOSbU6UTgpBi72OX5FZCEJyBaDoo5sKHZAdWFWZBxCVbExwWxqPxms20F8BZAeOYTdOulBkFTfZAYVpp3vZBOQvFou1tjUte626kT3MTi7k",
+      fields: 'id,name,email,posts{instagram_eligibility,is_published},photos,videos{embed_html,description,status,video_insights}',
+    };
+    FB.api('/230689359885934', 'POST', params, function (response: any) {
+      console.log(response);
+    });
+  }
+
+
+  logInToFB(access: any) {
+    (window as any).FB.login((response: any) => {
+      this.facebookUserAccessToken = response.authResponse?.accessToken;
+      this.testAPI(this.facebookUserAccessToken);
+      this.post();
+    }, { scope: 'user_photos,user_videos,user_posts,publish_video,instagram_content_publish' });
   }
 }
+
+
+

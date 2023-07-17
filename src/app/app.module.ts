@@ -19,7 +19,7 @@ import { FilterPipe } from './Services/filter-list.pipe';
     MediaUploadComponent,
     ContentComponent,
     PrivcayPolicayComponent,
-    FilterPipe
+    FilterPipe,
   ],
   imports: [
     BrowserModule,
