@@ -97,10 +97,11 @@
                 <label for="fileInput" class="isBold colorGray" id="dragDropLabel">Click or Drag &amp; Drop
                     media</label>
                 <input type="file" id="fileInput" accept="image/*,video/*" (change)="onSelectFile($event)" multiple />
+                <div id="imagePreviewContainer"></div>
             </div>
             <mat-card-actions *ngIf="mydata">
                 <button mat-button color="primary" (click)="post()">Publish</button>
-                <button (click)="logInToFB($event)">Login with Facebook</button>
+                <button (click)="onPublishClick()">Login with Facebook</button>
             </mat-card-actions>
         </mat-card>
     </div>

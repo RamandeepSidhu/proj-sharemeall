@@ -278,3 +278,43 @@ export class ContentComponent {
   //   );
 
   // }
+
+  // checkLoginState() {
+  //   FB.getLoginStatus((response: any) => {
+  //     this.statusChangeCallback(response);
+  //     if (response.status === 'connected') {
+  //       var accessToken = response.authResponse.accessToken;
+  //       console.log(accessToken, 'accessToken ')
+  //     }
+  //   });
+  // }
+
+  // statusChangeCallback(response: any) {
+  //   if (response.status === 'connected') {
+  //     this.testAPI(response);
+  //   } else {
+  //     const statusElement = document.getElementById('status');
+  //     if (statusElement) {
+  //       statusElement.innerHTML = 'Please log into this webpage.';
+  //     }
+  //   }
+  // }
+  // testAPI(accessToken: any) {
+  //   console.log('Welcome! Fetching your information....');
+  //   const params = {
+  //     access_token: "EAADjr33njLcBAE6XG6OkYIxu1VWmeAublFuUc4lBYWKG31xBmHqJ9ZCLeZCFjwsDlKe5vVCtjZAYYKCAbGUCM5rPu27XnHWVZCAeOOO6KqXn9cfrzQm1ZCAtM2FT76Cuh3TH9AMcPdroRtNrUdy1vND7IlnkYWj60HOHjoCWkiUuKGY2yrsbvFXscw2nVorbrHd9AcKQtToNoUZB2C08sAjT3nCcihZCWdfCex8WaYQnYvZCd4jJtlNb",
+  //     fields: 'id,name,email,videos{source},posts{id,source,caption},first_name',
+  //   };
+  //   FB.api('/230689359885934', 'POST', params, function (response: any) {
+  //     console.log(response);
+  //   });
+
+  // }
+
+  // logInToFB(access: any) {
+  //   (window as any).FB.login((response: any) => {
+  //     this.facebookUserAccessToken = response.authResponse?.accessToken;
+  //     this.testAPI(this.facebookUserAccessToken);
+  //     this.post();
+  //   }, { scope: 'user_photos,user_videos,user_posts,publish_video,instagram_content_publish' });
+  // }

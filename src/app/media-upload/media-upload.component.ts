@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ChatGptService } from '../Services/chat-gpt.service';
 import { Token } from '@angular/compiler';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class textResponse {
   sno: number = 1;
   text: string = '';
@@ -24,6 +25,10 @@ export class MediaUploadComponent {
   cardText: any;
   writeText!: any;
   isAIAssistOpen: boolean = false;
+  formData: FormData = new FormData();
+  pageId: string = '110499812113968';
+  accessToken = 'EAADjr33njLcBADzqyrPplZCGIJLbPm05PsuPlOtH1rmbUJM8ZAudZCQ8wABpd88owO5155pD8l2OFMQl5um6m91S7OAMjiEdmQbSniFLu4FdZA9BLMCRsmjDcKIO3tEvOQGGlC6pkQgZBM3CC59VKxnbKrK8QPf9z0ZBxcLrl3j1zZBZBXPcsrscqPb4Ge32kzqifoMT1TS3GZBsKU6nY4P3a';
+
   hashtags = [
     { id: "spread", value: "#spread", color: 3, twitter: "8", instagram: null },
     { id: "forget", value: "#forget", color: 3, twitter: "8", instagram: null },
@@ -33,24 +38,29 @@ export class MediaUploadComponent {
   newTextList: textResponse[] = [{ sno: 1, text: '', response: '' }];
   hastageCardText: any;
   facebookUserAccessToken: any;
-  constructor(private openaiService: ChatGptService) { }
+  constructor(private openaiService: ChatGptService, private http: HttpClient) { }
   ngOnInit() {
     this.post();
   }
-  onSelectFile(event: any) {
-    const files = event.target.files;
-    if (files) {
-      for (const file of files) {
-        const reader = new FileReader();
-        reader.onload = (event: any) => {
-          const url = event.target.result;
-          const type = file.type.indexOf("image") > -1 ? "img" : "video";
-          this.mydata.push({ url, type });
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
+  // onSelectFile(event: any) {
+  //   const files = event.target.files;
+  //   if (files) {
+  //     for (const file of files) {
+  //       const reader = new FileReader();
+  //       reader.onload = (event: any) => {
+  //         const dataUrl = event.target.result;
+  //         const type = file.type.indexOf("image") > -1 ? "img" : "video";
+  //         const url = URL.createObjectURL(file);
+
+  //         this.mydata.push({ url, type });
+  //         console.log(url)
+
+  //       };
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }
+  // }.
+
 
   hastageText(dataList: textResponse[], searchText: any) {
     this.showSpinner = true;
@@ -190,11 +200,84 @@ export class MediaUploadComponent {
   selectHashtag(hashtag: { value: string; }) {
     this.bioText += " " + hashtag.value;
   }
+
+
+  // facebook integration
+
+  // imagesUrlData: any = "http://floral.fox-sandbox.co.uk/media/wysiwyg/valentines-blog.jpg"
+
+  // publishToInstagram(imageURL: any) {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${this.accessToken}`
+  //   });
+  //   this.http.post(`https://graph.facebook.com/110499812113968/photos?url=${this.imagesUrlData}&access_token=${this.accessToken}`, '')
+  //     .subscribe(
+  //       (response: any) => {
+  //         this.post()
+  //         console.log('Post published successfully:', response);
+  //       },
+  //       (error: any) => {
+  //         console.error('Error publishing post:', error);
+  //       }
+  //     );
+  // }
+  selectedFile: File | null = null;
+  onSelectFile(event: any) {
+    const fileReader: FileReader = new FileReader();
+    const file = event.target.files[0];
+    this.selectedFile = file;
+
+    const pageAccessToken = 'EAADjr33njLcBADzqyrPplZCGIJLbPm05PsuPlOtH1rmbUJM8ZAudZCQ8wABpd88owO5155pD8l2OFMQl5um6m91S7OAMjiEdmQbSniFLu4FdZA9BLMCRsmjDcKIO3tEvOQGGlC6pkQgZBM3CC59VKxnbKrK8QPf9z0ZBxcLrl3j1zZBZBXPcsrscqPb4Ge32kzqifoMT1TS3GZBsKU6nY4P3a';
+
+    fileReader.onloadend = () => {
+      const photoData = new Blob([fileReader.result as ArrayBuffer], { type: 'image/jpg' });
+      const formData = new FormData();
+      formData.append('access_token', pageAccessToken);
+      formData.append('source', photoData);
+      formData.append('message', this.bioText);
+
+      const imageURL = URL.createObjectURL(file);
+      const imagePreview = document.createElement('img');
+      imagePreview.src = imageURL;
+      document.body.appendChild(imagePreview);
+      console.log(this.selectedFile);
+    };
+
+    fileReader.readAsArrayBuffer(file);
+  }
+
+  publishToFacebook(formData: FormData, pageId: any) {
+    const publishURL = `https://graph.facebook.com/${pageId}/photos`;
+    fetch(publishURL, {
+      body: formData,
+      method: 'POST'
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log('Post published successfully:', responseData);
+      })
+      .catch((error) => {
+        console.error('Error publishing post:', error);
+      });
+  }
+  onPublishClick() {
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('access_token', this.accessToken);
+      formData.append('source', this.selectedFile);
+      formData.append('message', this.bioText);
+
+      this.publishToFacebook(formData, this.pageId);
+    } else {
+      console.error('No file selected.');
+    }
+  }
   post() {
     setTimeout(() => {
-      this.authorizeInstagram();
+      // this.authorizeInstagram();
       localStorage.setItem('mydata', JSON.stringify(this.mydata));
-      const dataList: textResponse[] = []; // Replace this with your actual dataList
+      const dataList: textResponse[] = [];
       const generatedTextPromises = dataList.map((data: textResponse) => {
         return this.openaiService.generateText(data.text).then((text: any) => {
           data.response = text;
@@ -216,47 +299,6 @@ export class MediaUploadComponent {
       text: this.bioText,
       bio: this.mydata
     };
-    this.logInToFB(dataStore);
-
-    console.log(dataStore, 'datagghgStore')
-  }
-
-  // facebook integration
-  checkLoginState() {
-    FB.getLoginStatus((response: any) => {
-      this.statusChangeCallback(response);
-    });
-  }
-
-  statusChangeCallback(response: any) {
-    console.log('statusChangeCallback');
-    if (response.status === 'connected') {
-      this.testAPI(response);
-    } else {
-      const statusElement = document.getElementById('status');
-      if (statusElement) {
-        statusElement.innerHTML = 'Please log into this webpage.';
-      }
-    }
-  }
-  testAPI(accessToken: any) {
-    console.log('Welcome! Fetching your information....');
-    const params = {
-      access_token: "EAADjr33njLcBAOzvB9sR1cvJDGaMHci4ZCGUAMXZCg6dir4paAeOZAyJ4S15fnxEZA5kVZA5zFLgwQJqMR6qF6Og55oKhBrvnmSKA8OXTNXk3pMRCQ4ZCyotgfb4HdO33Ike8ZC4cufn8xHrQlTOSbU6UTgpBi72OX5FZCEJyBaDoo5sKHZAdWFWZBxCVbExwWxqPxms20F8BZAeOYTdOulBkFTfZAYVpp3vZBOQvFou1tjUte626kT3MTi7k",
-      fields: 'id,name,email,posts{instagram_eligibility,is_published},photos,videos{embed_html,description,status,video_insights}',
-    };
-    FB.api('/230689359885934', 'POST', params, function (response: any) {
-      console.log(response);
-    });
-  }
-
-
-  logInToFB(access: any) {
-    (window as any).FB.login((response: any) => {
-      this.facebookUserAccessToken = response.authResponse?.accessToken;
-      this.testAPI(this.facebookUserAccessToken);
-      this.post();
-    }, { scope: 'user_photos,user_videos,user_posts,publish_video,instagram_content_publish' });
   }
 }
 
